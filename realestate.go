@@ -14,7 +14,7 @@ import (
 
 func main() {
 	var result Result
-	yamlConfig := readYamlFile("./properties.yaml", &result)
+	yamlConfig := readYamlFile("properties.yaml", &result)
 	properties := yamlConfig.Properties
 
 	if len(properties) <= 0 {
