@@ -1,10 +1,11 @@
 package structs
 
 type RealEstatePrices struct {
-	Properties  []PropertyDetails `json:"properties,omitempty"`
-	TotalEquity float64           `json:"totalEquity,omitempty"`
-	Success     *bool             `json:"success,omitempty"`
-	Error       string            `json:"error,omitempty"`
+	Properties  []PropertyDetails `json:"properties,omitempty" bson:"properties,omitempty"`
+	TotalEquity float64           `json:"totalEquity,omitempty" bson:"totalEquity,omitempty"`
+	TotalValue  float64           `json:"totalValue,omitempty" bson:"totalValue,omitempty"`
+	Success     *bool             `json:"success,omitempty" bson:"success,omitempty"`
+	Error       string            `json:"error,omitempty" bson:"error,omitempty"`
 }
 
 type PropertyDetails struct {

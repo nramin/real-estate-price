@@ -37,6 +37,7 @@ func main() {
 		result.Properties = append(result.Properties, property)
 
 		result.TotalEquity += property.Equity
+		result.TotalValue += property.Price
 	}
 
 	success := new(bool)
