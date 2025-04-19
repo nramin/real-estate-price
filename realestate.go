@@ -9,11 +9,12 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
+	"github.com/nramin/real-estate-price/structs"
 	"gopkg.in/yaml.v3"
 )
 
 func main() {
-	var result Result
+	var result structs.RealEstatePrices
 	yamlConfig := readYamlFile("properties.yaml", &result)
 	properties := yamlConfig.Properties
 
@@ -28,7 +29,7 @@ func main() {
 			printError(&result, "Home value could not be retrieved.")
 			os.Exit(0)
 		}
-		var property PropertyDetails
+		var property structs.PropertyDetails
 		property.Address = v.Address
 		property.Balance = v.Balance
 		property.Price = zillowEstimate
@@ -47,21 +48,7 @@ func main() {
 	os.Exit(0)
 }
 
-type Result struct {
-	Properties  []PropertyDetails `json:"properties,omitempty"`
-	TotalEquity float64           `json:"totalEquity,omitempty"`
-	Success     *bool             `json:"success,omitempty"`
-	Error       string            `json:"error,omitempty"`
-}
-
-type PropertyDetails struct {
-	Address string  `json:"address,omitempty"`
-	Price   float64 `json:"price,omitempty"`
-	Equity  float64 `json:"equity,omitempty"`
-	Balance float64 `json:"balance,omitempty"`
-}
-
-func getZillowEstimate(zillow string, result *Result) float64 {
+func getZillowEstimate(zillow string, result *structs.RealEstatePrices) float64 {
 	var estimate float64
 	c := colly.NewCollector(
 		colly.AllowedDomains(
@@ -98,13 +85,13 @@ func getZillowEstimate(zillow string, result *Result) float64 {
 	return estimate
 }
 
-func readYamlFile(filePath string, result *Result) YamlConfig {
+func readYamlFile(filePath string, result *structs.RealEstatePrices) structs.YamlConfig {
 	b, err := os.ReadFile(filePath)
 	if err != nil {
 		printError(result, "Unable to read input file "+filePath)
 		os.Exit(0)
 	}
-	var yamlConfig YamlConfig
+	var yamlConfig structs.YamlConfig
 
 	err = yaml.Unmarshal([]byte(b), &yamlConfig)
 	if err != nil {
@@ -115,17 +102,7 @@ func readYamlFile(filePath string, result *Result) YamlConfig {
 	return yamlConfig
 }
 
-type YamlConfig struct {
-	Properties []Property `yaml:"properties"`
-}
-
-type Property struct {
-	Address string  `yaml:"address"`
-	Zillow  string  `yaml:"zillow"`
-	Balance float64 `yaml:"balance"`
-}
-
-func printError(result *Result, error string) {
+func printError(result *structs.RealEstatePrices, error string) {
 	success := new(bool)
 	*success = false
 
